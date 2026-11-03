@@ -1,0 +1,264 @@
+(function () {
+  const VALID_SCREEN_IDS = ['home', 'quiz', 'loading', 'result', 'atlas'];
+
+  function showScreen(screenId) {
+    if (!VALID_SCREEN_IDS.includes(screenId)) {
+      return;
+    }
+
+    document.querySelectorAll('.screen').forEach((screen) => {
+      const isActive = screen.id === screenId;
+      screen.hidden = !isActive;
+      screen.classList.toggle('is-active', isActive);
+    });
+  }
+
+  function updateCompletionCount() {
+    const node = document.getElementById('completion-count');
+    if (!node) {
+      return;
+    }
+    const count = DogTiStorage.getCompletedCount();
+    node.textContent = `🐾 已在这台设备完成 ${count} 次测试`;
+  }
+
+  function renderAtlas() {
+    const grid = document.getElementById('atlas-grid');
+    const unlockCount = document.getElementById('unlock-count');
+    if (!grid || !unlockCount) {
+      return;
+    }
+
+    const unlocked = DogTiStorage.loadUnlocked();
+    const cards = (window.DogTiData && window.DogTiData.results ? window.DogTiData.results : []);
+    unlockCount.textContent = String(unlocked.length);
+
+    grid.innerHTML = cards.map((result) => {
+      const unlockedNow = unlocked.includes(result.id);
+      return `
+        <button type="button" class="atlas-card ${unlockedNow ? '' : 'locked'}" data-result-id="${result.id}" ${unlockedNow ? '' : 'aria-disabled="true"'}>
+          <span class="atlas-emoji" aria-hidden="true">${result.emoji}</span>
+          <span class="atlas-name">${unlockedNow ? result.name : '待解锁'}</span>
+          <span class="atlas-title">${unlockedNow ? result.title : '还没遇到它'}</span>
+          <span class="atlas-lock" aria-hidden="true">${unlockedNow ? '✅' : '🔒'}</span>
+        </button>
+      `;
+    }).join('');
+
+    grid.querySelectorAll('.atlas-card').forEach((button) => {
+      button.addEventListener('click', () => {
+        const resultId = button.dataset.resultId;
+        if (!resultId || !unlocked.includes(resultId)) {
+          return;
+        }
+        const result = DogTiScoring.getResultById(resultId);
+        if (!result) {
+          return;
+        }
+        const url = new URL(window.location.href);
+        url.searchParams.set('result', result.id);
+        window.history.pushState({}, '', url);
+        renderResultScreen(result.id);
+        showScreen('result');
+      });
+    });
+  }
+
+  function renderResultScreen(resultId) {
+    const result = DogTiScoring.getResultById(resultId);
+    if (!result) {
+      return;
+    }
+
+    const heading = document.getElementById('result-heading');
+    const tagline = document.getElementById('result-tagline');
+    const keywords = document.getElementById('result-keywords');
+    const art = document.getElementById('result-art');
+    const dimensionBars = document.getElementById('dimension-bars');
+    const analysisGrid = document.getElementById('analysis-grid');
+
+    if (heading) heading.textContent = result.name;
+    if (tagline) tagline.textContent = result.summary;
+    if (art) art.textContent = result.emoji;
+    if (keywords) {
+      keywords.innerHTML = result.keywords.map((keyword) => `<span class="keyword">${keyword}</span>`).join('');
+    }
+
+    if (dimensionBars) {
+      dimensionBars.innerHTML = DogTiScoring.getDimensionEntries(result.vector || {}).map((item) => `
+        <div class="dimension-row">
+          <div class="dimension-label"><span>${item.label}</span><span>${item.value}</span></div>
+          <div class="dimension-track"><span style="width:${item.value}%"></span></div>
+        </div>
+      `).join('');
+    }
+
+    if (analysisGrid) {
+      const blocks = [
+        { label: '性格分析', text: result.story },
+        { label: '优点', text: result.strengths.join('、') },
+        { label: '隐藏弱点', text: result.weaknesses.join('、') },
+        { label: '社交方式', text: result.social },
+        { label: '恋爱模式', text: result.love },
+        { label: '小狗式建议', text: result.advice }
+      ];
+      analysisGrid.innerHTML = blocks.map((block) => `
+        <div class="analysis-block">
+          <h3>${block.label}</h3>
+          <p>${block.text}</p>
+        </div>
+      `).join('');
+    }
+
+    const url = new URL(window.location.href);
+    url.searchParams.set('result', result.id);
+    window.history.replaceState({}, '', url);
+    DogTiStorage.saveLastResult(result.id);
+    DogTiShare.bindResultActions();
+  }
+
+  function restoreSavedQuiz() {
+    const saved = DogTiStorage.loadProgress();
+    if (!saved || !Array.isArray(saved.answers)) {
+      return false;
+    }
+
+    const hasAnyAnswer = saved.answers.some((value) => value !== null && value !== undefined);
+    if (!hasAnyAnswer) {
+      return false;
+    }
+
+    DogTiQuiz.answers = saved.answers.slice(0, DogTiQuiz.answers.length);
+    DogTiQuiz.currentIndex = Math.min(Number(saved.currentIndex) || 0, DogTiQuiz.answers.length - 1);
+    return true;
+  }
+
+  function beginLoading(resultId) {
+    showScreen('loading');
+    setTimeout(() => {
+      renderResultScreen(resultId);
+      showScreen('result');
+    }, 1200);
+  }
+
+  function handleQuizComplete(answers) {
+    const userScores = DogTiScoring.buildTotalScoresForAnswers(answers);
+    const result = DogTiScoring.chooseBestResult(userScores);
+    if (!result) {
+      showScreen('home');
+      return;
+    }
+
+    DogTiStorage.unlockResult(result.id);
+    DogTiStorage.clearProgress();
+    DogTiStorage.incrementCompletedCount();
+    updateCompletionCount();
+    renderAtlas();
+    beginLoading(result.id);
+  }
+
+  function startQuiz() {
+    DogTiQuiz.onComplete = handleQuizComplete;
+    if (restoreSavedQuiz()) {
+      DogTiQuiz.renderQuestion();
+      showScreen('quiz');
+      return;
+    }
+    DogTiQuiz.reset();
+    DogTiQuiz.renderQuestion();
+    showScreen('quiz');
+  }
+
+  function goHome() {
+    DogTiStorage.saveProgress({ answers: DogTiQuiz.answers, currentIndex: DogTiQuiz.currentIndex });
+    updateCompletionCount();
+    renderAtlas();
+    showScreen('home');
+  }
+
+  function bindButtons() {
+    document.getElementById('start-button')?.addEventListener('click', startQuiz);
+    document.getElementById('home-atlas')?.addEventListener('click', () => {
+      renderAtlas();
+      showScreen('atlas');
+    });
+    document.getElementById('header-atlas')?.addEventListener('click', () => {
+      renderAtlas();
+      showScreen('atlas');
+    });
+    document.getElementById('result-home')?.addEventListener('click', goHome);
+    document.getElementById('result-atlas')?.addEventListener('click', () => {
+      renderAtlas();
+      showScreen('atlas');
+    });
+    document.getElementById('retake-button')?.addEventListener('click', () => {
+      DogTiStorage.clearProgress();
+      DogTiQuiz.reset();
+      DogTiQuiz.onComplete = handleQuizComplete;
+      DogTiQuiz.renderQuestion();
+      showScreen('quiz');
+    });
+    document.getElementById('atlas-home')?.addEventListener('click', () => {
+      showScreen('home');
+      updateCompletionCount();
+    });
+    document.getElementById('quiz-home')?.addEventListener('click', () => {
+      document.getElementById('confirm-layer').hidden = false;
+    });
+    document.getElementById('quit-quiz')?.addEventListener('click', () => {
+      document.getElementById('confirm-layer').hidden = false;
+    });
+    document.getElementById('confirm-cancel')?.addEventListener('click', () => {
+      document.getElementById('confirm-layer').hidden = true;
+    });
+    document.getElementById('confirm-leave')?.addEventListener('click', () => {
+      document.getElementById('confirm-layer').hidden = true;
+      DogTiStorage.saveProgress({ answers: DogTiQuiz.answers, currentIndex: DogTiQuiz.currentIndex });
+      showScreen('home');
+    });
+    document.getElementById('previous-button')?.addEventListener('click', () => {
+      DogTiQuiz.goToPrevious();
+      DogTiStorage.saveProgress({ answers: DogTiQuiz.answers, currentIndex: DogTiQuiz.currentIndex });
+    });
+  }
+
+  function initFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const resultId = params.get('result');
+    if (resultId) {
+      const result = DogTiScoring.getResultById(resultId);
+      if (!result) {
+        const clean = new URL(window.location.href);
+        clean.searchParams.delete('result');
+        window.history.replaceState({}, '', clean);
+        showScreen('home');
+        return;
+      }
+      renderResultScreen(result.id);
+      showScreen('result');
+      return;
+    }
+
+    if (restoreSavedQuiz()) {
+      DogTiQuiz.renderQuestion();
+      showScreen('quiz');
+      return;
+    }
+
+    showScreen('home');
+  }
+
+  function init() {
+    if (!window.DogTiStorage || !window.DogTiScoring || !window.DogTiQuiz) {
+      return;
+    }
+
+    updateCompletionCount();
+    renderAtlas();
+    bindButtons();
+    DogTiShare.bindResultActions();
+    initFromUrl();
+  }
+
+  window.addEventListener('DOMContentLoaded', init);
+})();
