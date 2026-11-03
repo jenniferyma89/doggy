@@ -24,86 +24,68 @@
 <body>
   <a class="skip-link" href="#main">跳到主要内容</a>
   <header class="topbar">
-    <a class="brand" href="#home" aria-label="DogTi 首页"><span class="brand-mark" aria-hidden="true">🐾</span> DogTi</a>
-    <button class="text-button" id="header-atlas" type="button">🐕 狗狗图鉴</button>
+    <a class="brand" href="#home" aria-label="DogTi 首页">DogTi</a>
+    <button class="text-button" id="header-atlas" type="button">狗狗图鉴</button>
   </header>
   <main id="main">
     <section class="screen home-screen is-active" id="home" aria-labelledby="home-title">
       <div class="hero-copy">
-        <p class="eyebrow">A LITTLE TEST, A LOT OF WOOF</p>
         <h1 id="home-title">测测你是什么<br><span>小狗</span>性格！</h1>
-        <p class="lead">24 个生活小场景，闻一闻你藏着哪种犬系灵魂。</p>
         <div class="hero-actions">
-          <button class="button button-primary" id="start-button" type="button">开始测试 <span aria-hidden="true">→</span></button>
-          <button class="button button-secondary" id="home-atlas" type="button">看看狗狗图鉴</button>
+          <button class="button button-primary" id="start-button" type="button">开始测试</button>
+          <button class="button button-secondary" id="home-atlas" type="button">狗狗图鉴</button>
         </div>
-        <p class="completion-count" id="completion-count">🐾 已在这台设备完成 0 次测试</p>
       </div>
-      <div class="hero-art" aria-label="一只戴着围巾的小狗插画" role="img">
-        <span class="sun-doodle" aria-hidden="true">✳</span><span class="float-heart" aria-hidden="true">♥</span>
-        <svg class="hero-dog" viewBox="0 0 300 290" role="img" aria-label="奶油色小狗">
-          <ellipse cx="150" cy="255" rx="100" ry="15" fill="#e9d8bd"/>
-          <path d="M91 125C45 92 44 41 73 37c37-5 47 45 45 78m89 9c49-32 48-82 19-87-37-5-47 45-45 78" fill="#b96c3e" stroke="#533c30" stroke-width="8" stroke-linecap="round"/>
-          <path d="M79 91c0-47 31-73 71-73s71 26 71 73v83c0 47-31 70-71 70s-71-23-71-70z" fill="#f2c98e" stroke="#533c30" stroke-width="8"/>
-          <ellipse cx="123" cy="121" rx="7" ry="10" fill="#3e3029"/><ellipse cx="177" cy="121" rx="7" ry="10" fill="#3e3029"/>
-          <path d="M139 145q11-11 22 0-1 13-11 13t-11-13" fill="#533c30"/><path d="M150 158q-11 17-22 4m22-4q11 17 22 4" fill="none" stroke="#533c30" stroke-width="5" stroke-linecap="round"/>
-          <path d="M82 187q68 35 136 0v29q-68 35-136 0z" fill="#81a982" stroke="#533c30" stroke-width="6"/><path d="M142 205l19 2-8 26-18-2z" fill="#ef8755" stroke="#533c30" stroke-width="4"/>
-          <circle cx="110" cy="142" r="3" fill="#e98d74"/><circle cx="190" cy="142" r="3" fill="#e98d74"/>
-        </svg>
-        <span class="art-caption">今天也要好好摇尾巴！</span>
-      </div>
-      <div class="home-notes"><span>✦ 约 3 分钟</span><span>✦ 没有标准答案</span><span>✦ 结果仅供娱乐</span></div>
-      <p class="disclaimer">DogTi 是轻松有趣的娱乐测试，不属于专业心理测评。每一种性格都值得被喜欢。</p>
     </section>
 
     <section class="screen quiz-screen" id="quiz" aria-labelledby="question-title" hidden>
-      <div class="quiz-heading"><button class="icon-button" id="quiz-home" type="button" aria-label="返回首页">←</button><span class="quiz-kicker">跟着直觉选就好</span><button class="text-button" id="quit-quiz" type="button">暂时离开</button></div>
+      <div class="quiz-heading">
+        <button class="icon-button" id="quiz-home" type="button" aria-label="返回首页">←</button>
+      </div>
       <div class="progress-row"><span id="question-counter">第 1 / 24 题</span><span id="progress-percent">4%</span></div>
       <div class="progress-track" role="progressbar" aria-label="测试进度" aria-valuemin="0" aria-valuemax="24" aria-valuenow="0"><span id="progress-fill"></span></div>
       <div class="question-card" id="question-card" aria-live="polite">
         <p class="question-label" id="question-category">生活切片</p><h1 id="question-title">准备好了吗？</h1>
         <div class="answer-list" id="answer-list" role="group" aria-labelledby="question-title"></div>
       </div>
-      <div class="quiz-footer"><button class="button button-quiet" id="previous-button" type="button" disabled>← 上一题</button><span>选项会自动保存</span></div>
+      <div class="quiz-footer"><button class="button button-quiet" id="previous-button" type="button" disabled>← 上一题</button><span>自动保存</span></div>
     </section>
 
     <section class="screen loading-screen" id="loading" aria-live="polite" hidden>
-      <div class="sniff-dog" aria-hidden="true">🐶</div><p class="eyebrow">NOSE AT WORK</p><h1>小狗正在闻闻<br>你的性格……</h1><p>请给鼻子一点点时间</p><div class="sniff-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="sniff-dog" aria-hidden="true">🐶</div><p class="eyebrow">NOSE AT WORK</p><h1>小狗正在闻闻<br>你的性格……</h1><p>请给鼻子一点点时间</p><div class="sniff-dots" aria-hidden="true"><span></span><span></span><span></span></div>
     </section>
 
     <section class="screen result-screen" id="result" aria-labelledby="result-heading" hidden>
-      <div class="result-topline"><button class="text-button" id="result-home" type="button">← 回到首页</button><span class="result-ribbon">你的犬系人格</span></div>
+      <div class="result-topline"><button class="text-button" id="result-home" type="button">← 返回</button><span class="result-ribbon">犬系人格</span></div>
       <article class="result-card" id="share-card">
-        <div class="result-art" id="result-art" aria-hidden="true">🐕</div>
-        <p class="eyebrow">DOGTI PERSONALITY FILE</p><h1 id="result-heading">正在寻找你的犬系人格</h1>
+        <div class="result-art" id="result-art" aria-hidden="true"></div>
+        <p class="eyebrow">结果</p><h1 id="result-heading">正在寻找你的犬系人格</h1>
         <p class="result-tagline" id="result-tagline"></p><div class="keyword-list" id="result-keywords"></div>
         <div class="dimension-panel"><h2>你的性格小雷达</h2><div id="dimension-bars" class="dimension-bars"></div></div>
         <div class="analysis-grid" id="analysis-grid"></div>
         <p class="result-disclaimer">娱乐测试结果，不属于专业心理测评。</p>
-        <p class="card-brand">DogTi · 测测你是什么小狗 <span>🐾</span></p>
       </article>
       <div class="result-actions">
-        <button class="button button-primary" id="copy-link" type="button">🔗 复制结果链接</button>
+        <button class="button button-primary" id="copy-link" type="button">复制结果链接</button>
         <button class="button button-secondary" id="share-native" type="button">分享结果</button>
         <button class="button button-secondary" id="copy-text" type="button">复制结果文案</button>
-        <button class="button button-secondary" id="download-card" type="button">下载结果卡片</button>
+        <button class="button button-secondary" id="download-card" type="button">下载结果卡</button>
         <button class="button button-quiet" id="retake-button" type="button">再测一次</button>
-        <button class="button button-quiet" id="result-atlas" type="button">打开狗狗图鉴</button>
+        <button class="button button-quiet" id="result-atlas" type="button">狗狗图鉴</button>
       </div>
     </section>
 
     <section class="screen atlas-screen" id="atlas" aria-labelledby="atlas-title" hidden>
-      <div class="section-heading"><button class="icon-button" id="atlas-home" type="button" aria-label="返回首页">←</button><div><p class="eyebrow">THE LITTLE DOG LIBRARY</p><h1 id="atlas-title">狗狗性格图鉴</h1></div></div>
-      <p class="atlas-intro">每完成一次测试，就能点亮一位新朋友。已解锁 <strong id="unlock-count">0</strong> / 12</p>
+      <div class="section-heading"><button class="icon-button" id="atlas-home" type="button" aria-label="返回首页">←</button><div><p class="eyebrow">DOG LIBRARY</p><h1 id="atlas-title">小狗图鉴</h1></div></div>
+      <p class="atlas-intro">已解锁 <strong id="unlock-count">0</strong> / 12</p>
       <div class="atlas-grid" id="atlas-grid"></div>
-      <p class="atlas-hint">🔒 锁住的小狗还在等你来认识</p>
     </section>
   </main>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <div class="confirm-layer" id="confirm-layer" hidden>
     <section class="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-message">
       <span class="dialog-paw" aria-hidden="true">🐾</span><h2 id="confirm-title">先歇一会儿？</h2><p id="confirm-message">目前的进度会替你保存好。</p>
-      <div class="dialog-actions"><button class="button button-quiet" id="confirm-cancel" type="button">继续测试</button><button class="button button-primary" id="confirm-leave" type="button">回到首页</button></div>
+      <div class="dialog-actions"><button class="button button-quiet" id="confirm-cancel" type="button">继续测试</button><button class="button button-primary" id="confirm-leave" type="button">确认离开</button></div>
     </section>
   </div>
 </body>
