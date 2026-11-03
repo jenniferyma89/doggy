@@ -27,7 +27,9 @@
   }
 
   function buildTotalScoresForAnswers(answerMap) {
-    const totals = createEmptyScores();
+    const actualTotals = createEmptyScores();
+    const minTotals = createEmptyScores();
+    const maxTotals = createEmptyScores();
     const questions = window.DogTiData && window.DogTiData.questions ? window.DogTiData.questions : [];
 
     questions.forEach((question, index) => {
@@ -42,11 +44,26 @@
       }
 
       DIMENSIONS.forEach((key) => {
-        totals[key] += Number(selectedOption.scores[key] || 0);
+        const optionScores = question.options.map((option) => Number((option.scores && option.scores[key]) || 0));
+        actualTotals[key] += Number(selectedOption.scores[key] || 0);
+        minTotals[key] += Math.min(...optionScores);
+        maxTotals[key] += Math.max(...optionScores);
       });
     });
 
-    return normalizeScores(totals);
+    const normalized = createEmptyScores();
+    DIMENSIONS.forEach((key) => {
+      const range = maxTotals[key] - minTotals[key];
+      if (range === 0) {
+        normalized[key] = 50;
+        return;
+      }
+
+      const score = ((actualTotals[key] - minTotals[key]) / range) * 100;
+      normalized[key] = Math.max(0, Math.min(100, Math.round(score)));
+    });
+
+    return normalized;
   }
 
   function calculateDistance(userVector, resultVector) {
