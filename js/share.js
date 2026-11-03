@@ -182,7 +182,7 @@
     const countNode = document.getElementById('completion-count');
     if (!countNode) return;
     const count = DogTiStorage.getCompletedCount();
-    countNode.textContent = `🐾 已在这台设备完成 ${count} 次测试`;
+    countNode.textContent = `已在该设备完成 ${count} 次测试`;
   }
 
   function buildAtlasCards() {
@@ -200,8 +200,8 @@
         <button type="button" class="atlas-card ${isUnlocked ? '' : 'locked'}" data-result-id="${result.id}" ${isUnlocked ? '' : 'aria-disabled="true"'}>
           <span class="atlas-emoji" aria-hidden="true">${result.emoji}</span>
           <span class="atlas-name">${isUnlocked ? result.name : '待解锁'}</span>
-          <span class="atlas-title">${isUnlocked ? result.title : '还没遇到它'}</span>
-          <span class="atlas-lock" aria-hidden="true">${isUnlocked ? '✅' : '🔒'}</span>
+          <span class="atlas-title">${isUnlocked ? result.title : '未解锁'}</span>
+          <span class="atlas-lock" aria-hidden="true">${isUnlocked ? '已解锁' : '未解锁'}</span>
         </button>
       `;
     }).join('');
@@ -238,7 +238,7 @@
 
     resultHeading.textContent = result.name;
     resultTagline.textContent = result.summary;
-    resultArt.textContent = result.emoji;
+    resultArt.textContent = '';
     resultKeywords.innerHTML = result.keywords.map((keyword) => `<span class="keyword">${keyword}</span>`).join('');
 
     const scores = DogTiScoring.getDimensionEntries(result.vector || {});
@@ -336,10 +336,12 @@
     const retakeButton = document.getElementById('retake-button');
     const atlasHome = document.getElementById('atlas-home');
 
-    startButton.addEventListener('click', () => {
-      DogTiQuiz.onComplete = handleQuizComplete;
-      openQuiz();
-    });
+    if (startButton) {
+      startButton.addEventListener('click', () => {
+        DogTiQuiz.onComplete = handleQuizComplete;
+        openQuiz();
+      });
+    }
 
     [atlasButton, headerAtlas].forEach((button) => {
       if (button) button.addEventListener('click', () => {
@@ -446,4 +448,3 @@
 
   window.addEventListener('DOMContentLoaded', init);
 })();
-

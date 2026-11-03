@@ -51,14 +51,14 @@
 
   function calculateDistance(userVector, resultVector) {
     const weights = {
-      extroversion: 1.08,
-      family: 1.12,
-      energy: 1.08,
-      curiosity: 1.06,
-      independence: 1.1,
-      sensitivity: 1.12,
-      order: 1.14,
-      healing: 1.1
+      extroversion: 1,
+      family: 0.92,
+      energy: 1,
+      curiosity: 1,
+      independence: 1.05,
+      sensitivity: 1,
+      order: 1.02,
+      healing: 0.9
     };
 
     let total = 0;
@@ -76,15 +76,20 @@
       return null;
     }
 
+    const normalizedUser = normalizeScores(userScores);
     let bestResult = results[0];
     let bestDistance = Number.POSITIVE_INFINITY;
 
     results.forEach((result) => {
-      const distance = calculateDistance(userScores, result.vector || createEmptyScores());
-      const tieBreaker = result.id.localeCompare(bestResult.id);
+      const resultVector = normalizeScores(result.vector || createEmptyScores());
+      const distance = calculateDistance(normalizedUser, resultVector);
+      const balancePenalty = DIMENSIONS.reduce((sum, key) => {
+        return sum + Math.abs(normalizedUser[key] - resultVector[key]);
+      }, 0) / DIMENSIONS.length;
+      const score = distance + balancePenalty * 0.08;
 
-      if (distance < bestDistance || (distance === bestDistance && tieBreaker < 0)) {
-        bestDistance = distance;
+      if (score < bestDistance) {
+        bestDistance = score;
         bestResult = result;
       }
     });
