@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="DogTi favicon">
+  <rect width="128" height="128" rx="30" fill="#fff6de"/>
+  <circle cx="64" cy="64" r="42" fill="#f6b777"/>
+  <circle cx="47" cy="52" r="7" fill="#3a322f"/>
+  <circle cx="81" cy="52" r="7" fill="#3a322f"/>
+  <path d="M49 68c8 9 22 9 30 0" fill="none" stroke="#3a322f" stroke-width="6" stroke-linecap="round"/>
+  <path d="M32 64c-9-12-10-26-1-35 8 4 13 14 12 24" fill="#f8d8a6" stroke="#3a322f" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M96 64c9-12 10-26 1-35-8 4-13 14-12 24" fill="#f8d8a6" stroke="#3a322f" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="52" cy="82" r="6" fill="#fff" opacity="0.7"/>
+  <circle cx="76" cy="82" r="6" fill="#fff" opacity="0.7"/>
+  <path d="M39 92c9 10 42 10 50 0" fill="none" stroke="#6d8f67" stroke-width="8" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="DogTi social preview">
+  <rect width="1200" height="630" fill="#fffaf0"/>
+  <circle cx="962" cy="140" r="100" fill="#e3f1e0"/>
+  <circle cx="220" cy="520" r="140" fill="#dfeef5"/>
+  <rect x="72" y="88" width="1056" height="454" rx="42" fill="#fffdf8" stroke="#ecdcc1" stroke-width="5"/>
+  <g transform="translate(140 120)">
+    <ellipse cx="235" cy="280" rx="175" ry="24" fill="#d9ccb3"/>
+    <path d="M82 140c-55-27-61-87-31-100 43-18 69 46 66 92" fill="#cca27b" stroke="#493931" stroke-width="7" stroke-linecap="round"/>
+    <path d="M212 120c58-28 65-90 30-100-43-18-70 48-66 95" fill="#cca27b" stroke="#493931" stroke-width="7" stroke-linecap="round"/>
+    <path d="M90 120c0-42 36-82 89-82s90 40 90 82v105c0 50-40 82-90 82s-89-32-89-82z" fill="#f2c98e" stroke="#493931" stroke-width="7"/>
+    <circle cx="153" cy="150" r="8" fill="#3a322f"/>
+    <circle cx="228" cy="150" r="8" fill="#3a322f"/>
+    <path d="M166 196q34-18 55 0" fill="none" stroke="#493931" stroke-width="7" stroke-linecap="round"/>
+    <path d="M110 252c21 18 66 29 123 0" fill="none" stroke="#739767" stroke-width="12" stroke-linecap="round"/>
+    <path d="M148 248l18 28-12 32-21-4z" fill="#f59364" stroke="#493931" stroke-width="4"/>
+  </g>
+  <g transform="translate(490 170)">
+    <text x="0" y="0" fill="#7aa37a" font-family="Verdana, sans-serif" font-size="26" font-weight="700">DOGTI</text>
+    <text x="0" y="84" fill="#46372e" font-family="Verdana, sans-serif" font-size="64" font-weight="800">测测你是什么</text>
+    <text x="0" y="154" fill="#46372e" font-family="Verdana, sans-serif" font-size="64" font-weight="800">小狗</text>
+    <text x="0" y="230" fill="#d47a49" font-family="Verdana, sans-serif" font-size="31" font-weight="700">自由、温柔、聪明、可爱</text>
+    <text x="0" y="292" fill="#7d6d5d" font-family="Verdana, sans-serif" font-size="22">24 道生活小题，得出你的犬系人格</text>
+  </g>
+</svg>
